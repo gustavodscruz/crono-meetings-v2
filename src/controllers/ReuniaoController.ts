@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 export const useReuniaoController = (initialSeconds = 0) => {
   const [seconds, setSeconds] = useState<number>(initialSeconds);
   const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [maxMinutes, setMaxMinutes] = useState<number>(10);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -36,6 +37,8 @@ export const useReuniaoController = (initialSeconds = 0) => {
 
   const isResetable: boolean = seconds > 0;
 
+  const addAMinute = () => setSeconds((seconds) => seconds + 60);
+
   return {
     reset,
     startCronometer,
@@ -46,5 +49,8 @@ export const useReuniaoController = (initialSeconds = 0) => {
     showedHours,
     showedSeconds,
     isResetable,
+    setMaxMinutes,
+    maxMinutes,
+    addAMinute,
   };
 };

@@ -21,6 +21,9 @@ function ReuniaoScreen({ theme }: { theme: MergedTheme }) {
     reset,
     isRunning,
     isResetable,
+    maxMinutes,
+    setMaxMinutes,
+    addAMinute,
   } = useReuniaoController();
 
   return (
@@ -55,23 +58,24 @@ function ReuniaoScreen({ theme }: { theme: MergedTheme }) {
               >
                 Pausar
               </Button>
-              <Button
-                mode="text"
-                icon="stop"
-                onPress={reset}
-                style={styles.controlButton}
-                disabled={!isResetable}
-              >
-                Resetar
-              </Button>
             </View>
+            <Button
+              mode="text"
+              icon="stop"
+              onPress={reset}
+              style={styles.controlButton}
+              disabled={!isResetable}
+            >
+              Resetar
+            </Button>
 
             <TextInput
               label="Duração (min)"
-              value="30"
+              value={maxMinutes.toString()}
               mode="outlined"
               editable={false}
               style={styles.input}
+              onChangeText={(text) => setMaxMinutes(parseInt(text))}
             />
 
             <View style={styles.progressWrapper}>
@@ -86,7 +90,7 @@ function ReuniaoScreen({ theme }: { theme: MergedTheme }) {
         <FAB
           icon="play"
           label="1+ min"
-          onPress={() => {}}
+          onPress={addAMinute}
           style={[styles.fab]}
         />
       </View>
@@ -101,7 +105,13 @@ const styles = StyleSheet.create({
   cardContent: { alignItems: "center", paddingVertical: 20 },
   timerText: { marginBottom: 8 },
   subtitle: { textAlign: "center", marginBottom: 12 },
-  controlsRow: { flexDirection: "row", alignItems: "center", marginTop: 8 },
+  controlsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 8,
+    marginBottom: 8,
+    justifyContent: "center",
+  },
   controlButton: { marginLeft: 8 },
   input: { width: 140, marginTop: 12 },
   progressWrapper: { width: "100%", marginTop: 12, alignItems: "center" },
