@@ -7,11 +7,11 @@ import {
   Text,
   Button,
   TextInput,
-  ProgressBar,
   FAB,
 } from "react-native-paper";
 import { MergedTheme } from "../theme/types";
 import { useReuniaoController } from "../controllers/DesignationController";
+import * as Progress from "react-native-progress";
 
 function DesingationScreen({ theme }: { theme: MergedTheme }) {
   const {
@@ -32,7 +32,6 @@ function DesingationScreen({ theme }: { theme: MergedTheme }) {
     finishEditingDuration,
     progress,
     progressPercentage,
-    maxShowedMinutes,
     title,
     onStateChange,
     open,
@@ -104,17 +103,18 @@ function DesingationScreen({ theme }: { theme: MergedTheme }) {
                 />
               </Pressable>
             </View>
-
             <View style={styles.progressWrapper}>
-              <ProgressBar
+              <Progress.Circle
                 progress={progress}
                 color={theme.colors.primary}
-                style={styles.progress}
+                borderColor={theme.colors.card}
+                formatText={() => `${progressPercentage}%`}
+                size={60}
               />
-              <Text variant="bodySmall" style={styles.progressLabel}>
-                {progressPercentage}% — {showedMinutes}:{showedSeconds} /{" "}
-                {maxShowedMinutes}:00 min
-              </Text>
+              {/*<Text variant="bodySmall" style={styles.progressLabel}>
+                  {progressPercentage}% — {showedMinutes}:{showedSeconds} /{" "}
+                  {maxShowedMinutes}:00 min
+                </Text>*/}
             </View>
           </Card.Content>
         </Card>
@@ -156,10 +156,15 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 8,
     justifyContent: "center",
+    gap: 8,
   },
   controlButton: { marginLeft: 8 },
   input: { width: 140, marginTop: 12 },
-  progressWrapper: { width: "100%", marginTop: 12, alignItems: "center" },
+  progressWrapper: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 15,
+  },
   progress: { height: 8, width: "100%", borderRadius: 8 },
   progressLabel: { marginTop: 8 },
   fab: { position: "absolute", right: 16, bottom: 24 },
