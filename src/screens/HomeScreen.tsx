@@ -28,7 +28,7 @@ const HomeScreen = ({ theme }: { theme: MergedTheme }) => {
         <Card.Actions>
           <Button
             mode="contained"
-            onPress={() => navigation.navigate("Reuniao")}
+            onPress={() => navigation.navigate("Parte")}
             style={styles.button}
             icon="play-circle-outline"
           >

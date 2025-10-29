@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/HomeScreen";
-import ReuniaoScreen from "../screens/ReuniaoScreen";
+import DesingationScreen from "../screens/DesignationScreen";
 import { ParamListBase } from "@react-navigation/native";
 import CustomNavigationBar from "../components/CustomNavigationBar";
 
@@ -16,11 +16,13 @@ const StackNavigator = () => {
     <Stack.Navigator
       initialRouteName="Home"
       screenOptions={{
-        header: (props) => <CustomNavigationBar {...props} />,
+        header: (props) => (
+          <CustomNavigationBar {...props} routesOptionsEnabled={["Parte"]} />
+        ),
       }}
     >
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Reuniao" component={ReuniaoScreen} />
+      <Stack.Screen name="Parte" component={DesingationScreen} />
     </Stack.Navigator>
   );
 };

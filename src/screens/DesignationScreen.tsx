@@ -1,4 +1,6 @@
-import { SafeAreaView, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
+
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Card,
   withTheme,
@@ -9,9 +11,9 @@ import {
   FAB,
 } from "react-native-paper";
 import { MergedTheme } from "../theme/types";
-import { useReuniaoController } from "../controllers/ReuniaoController";
+import { useReuniaoController } from "../controllers/DesignationController";
 
-function ReuniaoScreen({ theme }: { theme: MergedTheme }) {
+function DesingationScreen({ theme }: { theme: MergedTheme }) {
   const {
     showedHours,
     showedMinutes,
@@ -22,8 +24,18 @@ function ReuniaoScreen({ theme }: { theme: MergedTheme }) {
     isRunning,
     isResetable,
     maxMinutes,
-    setMaxMinutes,
+    onChangeDuration,
     addAMinute,
+    subtractAMinute,
+    handleDoubleTap,
+    isEditingDuration,
+    finishEditingDuration,
+    progress,
+    progressPercentage,
+    maxShowedMinutes,
+    title,
+    onStateChange,
+    open,
   } = useReuniaoController();
 
   return (
@@ -33,11 +45,15 @@ function ReuniaoScreen({ theme }: { theme: MergedTheme }) {
       <View style={styles.container}>
         <Card style={[styles.card]}>
           <Card.Content style={styles.cardContent}>
+            <Text variant="bodyMedium" style={styles.subtitle}>
+              {title}
+            </Text>
+
             <Text variant="headlineLarge" style={styles.timerText}>
               {showedHours}:{showedMinutes}:{showedSeconds}
             </Text>
             <Text variant="bodyMedium" style={styles.subtitle}>
-              Tempo de reunião — controles visuais abaixo
+              Tempo da parte
             </Text>
 
             <View style={styles.controlsRow}>
@@ -69,29 +85,58 @@ function ReuniaoScreen({ theme }: { theme: MergedTheme }) {
               Resetar
             </Button>
 
-            <TextInput
-              label="Duração (min)"
-              value={maxMinutes.toString()}
-              mode="outlined"
-              editable={false}
-              style={styles.input}
-              onChangeText={(text) => setMaxMinutes(parseInt(text))}
-            />
+            <View style={styles.controlsRow}>
+              <Pressable onPress={handleDoubleTap}>
+                <TextInput
+                  label="Duração (min)"
+                  value={maxMinutes.toString()}
+                  mode="outlined"
+                  editable={isEditingDuration}
+                  style={styles.input}
+                  onChangeText={onChangeDuration}
+                  onBlur={finishEditingDuration}
+                  keyboardType="numeric"
+                  right={
+                    isEditingDuration ? undefined : (
+                      <TextInput.Icon icon="pencil" />
+                    )
+                  }
+                />
+              </Pressable>
+            </View>
 
             <View style={styles.progressWrapper}>
-              <ProgressBar progress={0.3} style={styles.progress} />
+              <ProgressBar
+                progress={progress}
+                color={theme.colors.primary}
+                style={styles.progress}
+              />
               <Text variant="bodySmall" style={styles.progressLabel}>
-                30% — 00:09 / 00:30
+                {progressPercentage}% — {showedMinutes}:{showedSeconds} /{" "}
+                {maxShowedMinutes}:00 min
               </Text>
             </View>
           </Card.Content>
         </Card>
 
-        <FAB
-          icon="play"
-          label="1+ min"
-          onPress={addAMinute}
-          style={[styles.fab]}
+        <FAB.Group
+          open={open}
+          visible
+          icon={open ? "pencil" : "play"}
+          onStateChange={onStateChange}
+          style={styles.fabGroup}
+          actions={[
+            {
+              icon: "plus",
+              onPress: addAMinute,
+              label: "1+ min",
+            },
+            {
+              icon: "minus",
+              onPress: subtractAMinute,
+              label: "1- min",
+            },
+          ]}
         />
       </View>
     </SafeAreaView>
@@ -118,6 +163,7 @@ const styles = StyleSheet.create({
   progress: { height: 8, width: "100%", borderRadius: 8 },
   progressLabel: { marginTop: 8 },
   fab: { position: "absolute", right: 16, bottom: 24 },
+  fabGroup: { position: "absolute", right: 16, bottom: 24 },
 });
 
-export default withTheme(ReuniaoScreen);
+export default withTheme(DesingationScreen);
